@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 23:24:06
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-25 06:25:49
+ * @LastEditTime: 2024-06-27 23:41:00
  * @FilePath: /dedata-front/app/components/Maker.tsx
  * @Description: 同时满足 role值为1、address存在、applyStatus值为true时才会加载接口数据
  */
@@ -27,7 +27,7 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 	useEffect(() => {
 		async function loadData() {
 			const { code, data, msg } = await getMakerInfo(address, languageStatus);
-			console.log(code, data, msg);
+			// console.log(code, data, msg);
 			if (code === SUCCESS_CODE) {
 				const { content, expiredTime } = data;
 				setMakerInfo({
@@ -50,6 +50,7 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 			}
 		}
 		if (address && roleStatus === 1 && applyStatus) {
+			console.log('loadData');
 			loadData();
 		}
 	}, [address, roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange]);
@@ -77,7 +78,6 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 		const signature = await signMessageAsync({
 			message: signatureStr,
 		});
-
 		const body = {
 			caseId: makerInfo?.id,
 			content: abstract,
@@ -111,7 +111,7 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 					<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
 						Abstract
 						<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
-							（Summarize the news, no more than 30 words）
+							（Summarize the news, no more than 15 words）
 						</span>
 					</span>
 					<TextArea

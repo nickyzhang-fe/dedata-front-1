@@ -1,13 +1,13 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-25 23:01:58
+ * @LastEditTime: 2024-06-27 23:50:52
  * @FilePath: /dedata-front/app/page.tsx
  * @Description:
  */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ContentHeader from '@/app/components/ContentHeader';
 import Empty from '@/app/components/Empty';
 import Maker from '@/app/components/Maker';
@@ -32,7 +32,6 @@ export default function Home() {
 	useEffect(() => {
 		async function loadData() {
 			const { code, data, msg } = await getPendingCase(address);
-			console.log('----->page', code, data, msg);
 			if (code === SUCCESS_CODE) {
 				if (!data.isExist) {
 					setApplyStatus(false);
@@ -51,17 +50,16 @@ export default function Home() {
 	/**
 	 * 角色和语言状态改变
 	 */
-	function onRoleAndLanguageChange(params: any) {
-		console.log('roles and language status', params);
+	const onRoleAndLanguageChange = useCallback((params: any) => {
 		const { languageStatus, roleStatus } = params;
 		setLanguageStatus(languageStatus);
 		setRoleStatus(roleStatus);
-	}
+	}, []);
 	/**
 	 * 当前是否有任务状态改变
 	 */
 	function onApplyChange(status: boolean) {
-		console.log('接收status', status);
+		console.log('onApplyChange', status);
 		setApplyStatus(status);
 		setMinutes(10);
 		setSeconds(0);
@@ -69,17 +67,18 @@ export default function Home() {
 	/**
 	 * 获取过期时间
 	 */
-	function onExpiredTimeChange(time: any) {
+	const onExpiredTimeChange = useCallback((time: any) => {
 		const { minutes, seconds } = time;
 		setMinutes(minutes);
 		setSeconds(seconds);
-	}
+	}, []);
 	/**
 	 * 保存
 	 */
-	function onSaveChange() {
+	const onSaveChange = useCallback(() => {
+		console.log('onSaveChange');
 		setApplyStatus(false);
-	}
+	}, []);
 
 	if (!address) {
 		return <ConnectWallet />;

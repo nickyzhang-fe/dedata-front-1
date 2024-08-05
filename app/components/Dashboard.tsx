@@ -1,14 +1,14 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-24 23:34:11
+ * @LastEditTime: 2024-07-09 22:27:00
  * @FilePath: /dedata-front/app/components/Dashboard.tsx
  * @Description: 默认进来先判断是否有pending的onchain
  */
 'use client';
 
 import { message } from 'antd';
-import { useAccount, useSignMessage, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useSignMessage, useWriteContract, useWaitForTransactionReceipt, useEstimateGas } from 'wagmi';
 import { useState, useEffect, useCallback } from 'react';
 import { getSummaryInfo, updatePoints, getPendingOnchainTransactions } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
@@ -16,7 +16,7 @@ import useNonceRefetch from '@/app/hooks/useNonceRefetch';
 import useOnchainPoints from '@/app/hooks/useOnchainPoints';
 import { contractABI, contractAddress } from '@/app/utils/contractABI';
 import { parseEther } from 'viem';
-import { DOnchain } from '@/app/types/index';
+import { DOnchain, OnchainStatus } from '@/app/types/index';
 
 function Dashboard({ applyStatus }: any) {
 	const [userInfo, setUserInfo] = useState({
@@ -26,19 +26,24 @@ function Dashboard({ applyStatus }: any) {
 		onchainPoints: '0',
 	});
 	// 判断是否有pending的onchain
-	const [hasPendingOnchain, setHasPendingOnchain] = useState(false);
-	const [pendingInfo, setPendingInfo] = useState<DOnchain>({
-		oracleSignature: '',
-		points: [],
-	});
+	const [onchainStatus, setOnchainStatus] = useState<OnchainStatus>(0);
+
 	const { address, isConnected } = useAccount();
 	const { signMessageAsync } = useSignMessage();
-	const { error, isPending, isSuccess, writeContract } = useWriteContract();
-	const nonce = useNonceRefetch(address, 5000);
+	const { data, isPending, isSuccess, writeContractAsync } = useWriteContract();
+	const { nonce, getNonce } = useNonceRefetch(address, 5000);
+	const {
+		isLoading: isWaiting,
+		isSuccess: isConfirmed,
+		error,
+	} = useWaitForTransactionReceipt({
+		hash: data,
+		confirmations: 7,
+	});
 
 	const loadData = useCallback(async () => {
 		const result = await getSummaryInfo(address);
-		console.log(result);
+		console.log('------>loadData', result);
 		setUserInfo(result.data);
 	}, [address]);
 	/**
@@ -46,44 +51,52 @@ function Dashboard({ applyStatus }: any) {
 	 */
 	const getPendingChain = useCallback(async () => {
 		const { code, msg, data } = await getPendingOnchainTransactions(address);
-		console.log('------->getPendingChain', data);
+		// console.log('------->getPendingChain', data);
 		if (code === SUCCESS_CODE && data.length) {
 			const points = data.map((v: any) => {
 				const { points, cases } = v;
 				return {
 					tasks: cases,
 					nonce: nonce,
-					points: BigInt(Number(points)) * BigInt(1000000000000000000),
+					points: BigInt(Number(points) * 10) * BigInt(100000000000000000),
 				};
 			});
 			const oracleSignature = data[0].oracleSignature;
-			setPendingInfo({
+			setOnchainStatus(3);
+			return {
 				points,
 				oracleSignature,
-			});
-			setHasPendingOnchain(true);
+			};
 		} else {
-			setHasPendingOnchain(false);
-			setPendingInfo({
+			setOnchainStatus(0);
+			return {
 				points: [],
 				oracleSignature: '',
-			});
+			};
 		}
-	}, [nonce, address, setPendingInfo]);
+	}, [nonce, address]);
 
 	useEffect(() => {
-		console.log('Transaction isPending:', isPending);
-		console.log('Transaction isSuccess:', isSuccess);
-		console.log('Transaction error:', error);
-		if (isPending && !isSuccess) {
-			// 开始执行上链
+		if (isPending) {
+			console.log('Confirming...');
 		}
-		if (isSuccess && !isPending) {
-			// 上链成功
-			setHasPendingOnchain(false);
+	}, [isPending]);
+
+	useEffect(() => {
+		if (isWaiting) {
+			console.log('Waiting for confirmation...');
+			setOnchainStatus(1);
+		}
+		if (isConfirmed) {
+			console.log('Transaction confirmed.');
+			setOnchainStatus(2);
 			loadData();
 		}
-	}, [isPending, isSuccess, error, loadData]);
+		if (error) {
+			console.log('Transaction failed:', error);
+			setOnchainStatus(3);
+		}
+	}, [isWaiting, isConfirmed, loadData, error]);
 
 	useEffect(() => {
 		if (address && !applyStatus) {
@@ -93,12 +106,13 @@ function Dashboard({ applyStatus }: any) {
 	}, [address, applyStatus, getPendingChain, loadData]);
 
 	async function onChain() {
+		// 当前正在上链
+		if (onchainStatus === 1) return;
 		const pendingPoints = Number(userInfo.totalPoints) - Number(userInfo.onchainPoints);
 		const pendingCases = userInfo.totalCompletedCases - userInfo.onchainCases;
-		if (pendingPoints <= 0 && pendingCases <= 0) return;
-		await getPendingChain();
-		console.log('------->getPendingChain', pendingInfo);
-
+		const pendingInfo = await getPendingChain();
+		if (pendingPoints <= 0 && pendingCases <= 0 && !pendingInfo.oracleSignature) return;
+		await getNonce();
 		let oracleSignature = '';
 		let points = [];
 		// 如果pending为空，则需要重新上链，如果不为空，则上链pending的数据
@@ -109,22 +123,20 @@ function Dashboard({ applyStatus }: any) {
 				{
 					tasks: chainData.cases,
 					nonce: nonce,
-					points: BigInt(Number(chainData.points)) * BigInt(1000000000000000000),
+					points: BigInt(Number(chainData.points) * 10) * BigInt(100000000000000000),
 				},
 			];
 		} else {
 			oracleSignature = pendingInfo.oracleSignature;
 			points = pendingInfo.points;
 		}
-		console.log(oracleSignature, points);
 		const contractConfig: any = {
 			functionName: 'addPoints',
 			address: contractAddress,
 			abi: contractABI,
 			args: [address, ...points, oracleSignature],
 		};
-		console.log(contractConfig);
-		writeContract(contractConfig);
+		await writeContractAsync(contractConfig);
 	}
 	async function onChainUpdate() {
 		const signatureStr = `nonce: ${nonce}`;
@@ -173,7 +185,9 @@ function Dashboard({ applyStatus }: any) {
 						className="text-[0.14rem] leading-[0.24rem] bg-[#EFF7FF] mt-[0.06rem] h-[0.24rem] px-[0.1rem] text-[#3A54DF] rounded-[0.16rem] cursor-pointer"
 						onClick={onChain}
 					>
-						{hasPendingOnchain ? 'Retry' : 'Submit onChain'} &gt;
+						{(onchainStatus === 0 || onchainStatus === 2) && 'Submit onChain'}
+						{onchainStatus === 3 && 'Retry'}
+						{onchainStatus === 1 && 'Pending'} &gt;
 					</span>
 				</div>
 				<div className="flex flex-col justify-center items-center">

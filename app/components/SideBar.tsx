@@ -1,27 +1,36 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-24 23:36:52
+ * @LastEditTime: 2024-07-08 22:50:40
  * @FilePath: /dedata-front/app/components/SideBar.tsx
  * @Description:
  */
 'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { message } from 'antd';
 import dearticle from '@/app/assets/image/icon-dearticle.png';
 import { ROUTERS } from '@/app/utils/constant';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import style from '@/app/style/sidebar.module.css';
 function SideBar() {
 	const [index, setIndex] = useState(0);
+	const pathname = usePathname();
+
+	useEffect(() => {
+		if (pathname === '/') {
+			setIndex(0);
+		} else if (pathname === '/beta') {
+			setIndex(1);
+		} else if (pathname === '/others') {
+			setIndex(2);
+		}
+	}, [pathname]);
 
 	function handleClick(tabIndex: number) {
-		if (tabIndex === index) return;
-		if (tabIndex === 0) {
-			setIndex(tabIndex);
-		}
-		message.info('Coming Soon...');
+		setIndex(tabIndex);
 	}
 
 	const routersList = ROUTERS.map((router, tabIndex) => (

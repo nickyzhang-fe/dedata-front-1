@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-10 08:18:56
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-16 11:26:01
+ * @LastEditTime: 2024-07-08 21:49:56
  * @FilePath: /dedata-front/app/lib/api.tsx
  * @Description:
  */
@@ -63,13 +63,13 @@ export async function createMakerInfo(body: any) {
  * @param {*} address
  * @return {*}
  */
-export async function getCheckerInfo(address: string = '', lang: string = 'en') {
+export async function getCheckerInfo(address: string = '', lang: string = 'en', type: string = 1) {
 	const option = {
 		headers: {
 			lang,
 		},
 	};
-	return fetcher(`/v1/cases/check-case?address=${address}`, option);
+	return fetcher(`/v1/cases/check-case?address=${address}&type=${type}`, option);
 }
 /**
  * @description: 创建Checker信息

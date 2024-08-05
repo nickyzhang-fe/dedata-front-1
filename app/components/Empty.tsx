@@ -16,7 +16,6 @@ function Empty(props: any) {
 	const [visible, setVisible] = useState(false);
 	const { isConnected } = useAccount();
 	function onChange() {
-		console.log('Click', props);
 		if (!isConnected) {
 			message.info('Please connect wallet first');
 			return;

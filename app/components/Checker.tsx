@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-24 23:43:40
+ * @LastEditTime: 2024-07-08 21:50:07
  * @FilePath: /dedata-front/app/components/Checker.tsx
  * @Description:
  */
@@ -28,8 +28,8 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpi
 
 	useEffect(() => {
 		async function loadData() {
-			const { code, data, msg } = await getCheckerInfo(address, languageStatus);
-			console.log(code, data, msg);
+			const { code, data, msg } = await getCheckerInfo(address, languageStatus, 2);
+			// console.log(code, data, msg);
 			if (code === SUCCESS_CODE) {
 				const { content, expiredTime } = data;
 				setCheckerInfo({
@@ -59,7 +59,6 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpi
 	 * @description: 校验保存参数
 	 */
 	async function validatorChecker() {
-		console.log('submit', languageStatus);
 		if (!makerId) {
 			message.info('Please finish current case');
 			return;

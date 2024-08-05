@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-25 22:32:08
+ * @LastEditTime: 2024-07-04 22:41:39
  * @FilePath: /dedata-front/app/components/ContentHeader.tsx
  * @Description:
  */
@@ -19,6 +19,7 @@ function ContentHeader(props: any) {
 	const [disabled, setDisabled] = useState(false);
 	const [minutes, setMinutes] = useState(10);
 	const [seconds, setSeconds] = useState(0);
+	const [showRoles, setShowRoles] = useState(true);
 	const { isConnected } = useAccount();
 
 	useEffect(() => {
@@ -27,7 +28,10 @@ function ContentHeader(props: any) {
 		setRoleStatus(props.roleStatus);
 		setMinutes(props.minutes);
 		setSeconds(props.seconds);
-	}, [props.disabled, props.roleStatus, props.languageStatus, props.minutes, props.seconds]);
+		if (props.showRoles !== undefined && props.showRoles !== null) {
+			setShowRoles(!!props.showRoles);
+		}
+	}, [props]);
 
 	function languageChange(value: string) {
 		setLanguageStatus(value);
@@ -46,7 +50,6 @@ function ContentHeader(props: any) {
 	}
 
 	function applyCaseChange() {
-		console.log('---->applyCaseChange', disabled);
 		if (!isConnected) {
 			message.info('Please connect wallet first');
 			return;
@@ -59,7 +62,6 @@ function ContentHeader(props: any) {
 	}
 
 	function resetTime() {
-		console.log('resetTime');
 		props.onApplyChange(false);
 	}
 
@@ -68,7 +70,7 @@ function ContentHeader(props: any) {
 			<span className="text-[0.16rem] font-bold text-[#000]">{props.title}</span>
 			<div className="flex items-center h-[0.4rem]">
 				{disabled && (
-					<span className="text-[0.14rem] text-[#333] ml-[0.1rem]">
+					<span className="text-[0.14rem] text-[#333] ml-[0.1rem] mr-[0.3rem]">
 						Estimated point: {roleStatus === 1 ? 10 : 1}
 					</span>
 				)}
@@ -85,14 +87,16 @@ function ContentHeader(props: any) {
 					options={LANGUAGES}
 					disabled={disabled}
 				/>
-				<span className="text-[0.14rem] text-[#333] ml-[0.1rem]">Role:</span>
-				<Select
-					value={roleStatus}
-					style={{ width: '1.5rem', height: '0.32rem' }}
-					onChange={roleChange}
-					options={ROLES}
-					disabled={disabled}
-				/>
+				{showRoles && <span className="text-[0.14rem] text-[#333] ml-[0.1rem]">Role:</span>}
+				{showRoles && (
+					<Select
+						value={roleStatus}
+						style={{ width: '1.5rem', height: '0.32rem' }}
+						onChange={roleChange}
+						options={ROLES}
+						disabled={disabled}
+					/>
+				)}
 				<div
 					className="bg-[#3A54DF] h-[0.32rem] leading-[0.32rem] text-center w-[1.28rem] text-[#fff] text-[0.14rem] cursor-pointer rounded-[0.16rem] ml-[0.1rem]"
 					onClick={applyCaseChange}

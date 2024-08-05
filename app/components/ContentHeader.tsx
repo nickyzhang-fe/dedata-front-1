@@ -9,7 +9,7 @@
 
 import { Select, message } from 'antd';
 import { ROLES, LANGUAGES } from '@/app/utils/constant';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import CountDown from '@/app/components/CountDown';
 

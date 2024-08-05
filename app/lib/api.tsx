@@ -1,14 +1,14 @@
 /*
  * @Date: 2024-06-10 08:18:56
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-07-08 21:49:56
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-04 22:35:44
  * @FilePath: /dedata-front/app/lib/api.tsx
  * @Description:
  */
 import { fetcher } from './fetcher';
 
 /**
- * @description: 获取大盘数据
+ * @description: get dashboard data
  * @param {*} address
  * @return {*}
  */
@@ -16,7 +16,7 @@ export async function getSummaryInfo(address: string = '') {
 	return fetcher(`/v1/points/summary?address=${address}`);
 }
 /**
- * @description: 更新链数据
+ * @description: update onchain
  * @param {*} body
  * @return {*}
  */
@@ -27,15 +27,15 @@ export async function updatePoints(body: any) {
 	});
 }
 /**
- * @description: 获取当前用户的任务状态
+ * @description: get user task status
  * @param {*} address
  * @return {*}
  */
-export async function getPendingCase(address: string = '') {
-	return fetcher(`/v1/cases/pending-case?address=${address}`);
+export async function getPendingCase(address: string = '', type: number = 1) {
+	return fetcher(`/v1/cases/pending-case?address=${address}&type=${type}`);
 }
 /**
- * @description: 获取maker信息
+ * @description: get marker info
  * @param {*} address
  * @return {*}
  */
@@ -48,7 +48,7 @@ export async function getMakerInfo(address: string = '', lang: string = 'en') {
 	return fetcher(`/v1/cases/make-case?address=${address}`, option);
 }
 /**
- * @description: 创建maker信息
+ * @description: create maker info
  * @param {*} body
  * @return {*}
  */
@@ -59,11 +59,11 @@ export async function createMakerInfo(body: any) {
 	});
 }
 /**
- * @description: 获取Checker信息
+ * @description: get checker info
  * @param {*} address
  * @return {*}
  */
-export async function getCheckerInfo(address: string = '', lang: string = 'en', type: string = 1) {
+export async function getCheckerInfo(address: string = '', lang: string = 'en', type: number = 1) {
 	const option = {
 		headers: {
 			lang,
@@ -72,7 +72,7 @@ export async function getCheckerInfo(address: string = '', lang: string = 'en', 
 	return fetcher(`/v1/cases/check-case?address=${address}&type=${type}`, option);
 }
 /**
- * @description: 创建Checker信息
+ * @description: create checker info
  * @param {*} body
  * @return {*}
  */
@@ -83,7 +83,7 @@ export async function createCheckerInfo(body: any) {
 	});
 }
 /**
- * @description: 获取pendingonchain
+ * @description: get pending onchain
  * @param {*} address
  * @return {*}
  */

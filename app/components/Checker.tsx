@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-07-08 21:50:07
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-04 22:31:11
  * @FilePath: /dedata-front/app/components/Checker.tsx
  * @Description:
  */
@@ -16,7 +16,7 @@ import type { RadioChangeEvent } from 'antd';
 
 const { TextArea } = Input;
 
-function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange }: any) {
+function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange, type }: any) {
 	const [checkerInfo, setCheckerInfo] = useState({
 		content: '',
 		makeList: [],
@@ -28,7 +28,8 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpi
 
 	useEffect(() => {
 		async function loadData() {
-			const { code, data, msg } = await getCheckerInfo(address, languageStatus, 2);
+			const dataType = type === 'alpha' ? 1 : 2;
+			const { code, data, msg } = await getCheckerInfo(address, languageStatus, dataType);
 			// console.log(code, data, msg);
 			if (code === SUCCESS_CODE) {
 				const { content, expiredTime } = data;
@@ -54,9 +55,9 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpi
 		if (address && roleStatus === 2 && applyStatus) {
 			loadData();
 		}
-	}, [roleStatus, address, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange]);
+	}, [roleStatus, address, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange, type]);
 	/**
-	 * @description: 校验保存参数
+	 * @description: verify save parameters
 	 */
 	async function validatorChecker() {
 		if (!makerId) {
@@ -100,7 +101,7 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpi
 				{checkerInfo?.makeList.map((item: any, index) => {
 					return (
 						<div
-							className="bg-[#F5F7FA] px-[0.24rem] py-[0.16rem] rounded-[0.16rem] mb-[0.16rem]"
+							className="bg-[#F5F7FA] px-[0.2rem] py-[0.08rem] rounded-[0.16rem] mb-[0.1rem]"
 							key={index}
 						>
 							<Radio value={item.id}>{item.content}</Radio>

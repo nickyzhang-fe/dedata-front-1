@@ -1,21 +1,18 @@
 /*
  * @Date: 2024-06-04 22:20:34
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-11 23:33:51
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-04 22:40:14
  * @FilePath: /dedata-front/app/providers.tsx
  * @Description:
  */
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import { RainbowKitProvider, lightTheme, createAuthenticationAdapter } from '@rainbow-me/rainbowkit';
-import { argentWallet, trustWallet, ledgerWallet } from '@rainbow-me/rainbowkit/wallets';
-import { arbitrum, base, mainnet, optimism, polygon, zora } from 'wagmi/chains';
+import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
-import { SiweMessage } from 'siwe';
 import { config } from './wagmi';
+import { DomProviders } from './domProviders';
 
 const queryClient = new QueryClient();
 
@@ -24,9 +21,6 @@ export function Providers({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const fetchingStatusRef = useRef(false);
-	const verifyingRef = useRef(false);
-
 	return (
 		<WagmiProvider config={config}>
 			<QueryClientProvider client={queryClient}>
@@ -40,7 +34,7 @@ export function Providers({
 						overlayBlur: 'none',
 					})}
 				>
-					{children}
+					<DomProviders>{children}</DomProviders>
 				</RainbowKitProvider>
 			</QueryClientProvider>
 		</WagmiProvider>

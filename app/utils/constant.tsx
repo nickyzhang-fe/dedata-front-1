@@ -7,7 +7,7 @@
  */
 export const SUCCESS_CODE = '000000000';
 /**
- * 左侧菜单路由
+ * menu router
  */
 export const ROUTERS = [
 	{

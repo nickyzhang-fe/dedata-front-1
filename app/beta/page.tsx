@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-07-04 22:36:38
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-04 22:25:18
  * @FilePath: /dedata-front/app/beta/page.tsx
  * @Description:
  */
@@ -16,7 +16,6 @@ import { useAccount } from 'wagmi';
 import { getPendingCase } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
 import Dashboard from '@/app/components/Dashboard';
-import ConnectWallet from '@/app/components/ConnectWallet';
 
 export default function Beta() {
 	const { address, isConnected } = useAccount();
@@ -24,17 +23,17 @@ export default function Beta() {
 	const [languageStatus, setLanguageStatus] = useState('en');
 	const [minutes, setMinutes] = useState(10);
 	const [seconds, setSeconds] = useState(0);
-	// 申请状态，true代表有case，false代表case完成或者未开始
+	// apply status true: has case，false: no case or not started
 	const [applyStatus, setApplyStatus] = useState(false);
 
 	useEffect(() => {
 		async function loadData() {
-			const { code, data, msg } = await getPendingCase(address);
+			const { code, data, msg } = await getPendingCase(address, 2);
 			if (code === SUCCESS_CODE) {
 				if (!data.isExist) {
 					setApplyStatus(false);
 				} else {
-					// taskType 区分1：maker or 2：checker
+					// taskType 1：maker or 2：checker
 					setLanguageStatus(data.pendingCase.language);
 					setApplyStatus(true);
 				}
@@ -45,14 +44,14 @@ export default function Beta() {
 		}
 	}, [address]);
 	/**
-	 * 角色和语言状态改变
+	 * role and language status change
 	 */
 	const onRoleAndLanguageChange = useCallback((params: any) => {
 		const { languageStatus } = params;
 		setLanguageStatus(languageStatus);
 	}, []);
 	/**
-	 * 当前是否有任务状态改变
+	 * task status change
 	 */
 	function onApplyChange(status: boolean) {
 		setApplyStatus(status);
@@ -60,7 +59,7 @@ export default function Beta() {
 		setSeconds(0);
 	}
 	/**
-	 * 获取过期时间
+	 * get expired time
 	 */
 	const onExpiredTimeChange = useCallback((time: any) => {
 		const { minutes, seconds } = time;
@@ -68,15 +67,12 @@ export default function Beta() {
 		setSeconds(seconds);
 	}, []);
 	/**
-	 * 保存
+	 * save submit
 	 */
 	const onSaveChange = useCallback(() => {
 		setApplyStatus(false);
 	}, []);
 
-	if (!address) {
-		return <ConnectWallet />;
-	}
 	return (
 		<div className="flex flex-col flex-1 w-full overflow-hidden relative">
 			<Dashboard applyStatus={applyStatus} />
@@ -101,6 +97,7 @@ export default function Beta() {
 					onRoleAndLanguageChange={onRoleAndLanguageChange}
 				/>
 				<Checker
+					type="beta"
 					roleStatus={2}
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}

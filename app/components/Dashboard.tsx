@@ -1,9 +1,9 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-07-09 22:27:00
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-04 22:28:56
  * @FilePath: /dedata-front/app/components/Dashboard.tsx
- * @Description: 默认进来先判断是否有pending的onchain
+ * @Description: when entering, first determine whether there is a pending onchain.
  */
 'use client';
 
@@ -15,7 +15,6 @@ import { SUCCESS_CODE } from '@/app/utils/constant';
 import useNonceRefetch from '@/app/hooks/useNonceRefetch';
 import useOnchainPoints from '@/app/hooks/useOnchainPoints';
 import { contractABI, contractAddress } from '@/app/utils/contractABI';
-import { parseEther } from 'viem';
 import { DOnchain, OnchainStatus } from '@/app/types/index';
 
 function Dashboard({ applyStatus }: any) {
@@ -25,7 +24,7 @@ function Dashboard({ applyStatus }: any) {
 		totalPoints: '0',
 		onchainPoints: '0',
 	});
-	// 判断是否有pending的onchain
+	// check has pending onchain
 	const [onchainStatus, setOnchainStatus] = useState<OnchainStatus>(0);
 
 	const { address, isConnected } = useAccount();
@@ -47,7 +46,7 @@ function Dashboard({ applyStatus }: any) {
 		setUserInfo(result.data);
 	}, [address]);
 	/**
-	 * 需要判断是否有pending的上链操作
+	 * check has pending in onchain
 	 */
 	const getPendingChain = useCallback(async () => {
 		const { code, msg, data } = await getPendingOnchainTransactions(address);
@@ -62,7 +61,7 @@ function Dashboard({ applyStatus }: any) {
 				};
 			});
 			const oracleSignature = data[0].oracleSignature;
-			setOnchainStatus(3);
+			setOnchainStatus(1);
 			return {
 				points,
 				oracleSignature,
@@ -106,7 +105,7 @@ function Dashboard({ applyStatus }: any) {
 	}, [address, applyStatus, getPendingChain, loadData]);
 
 	async function onChain() {
-		// 当前正在上链
+		// in onchain
 		if (onchainStatus === 1) return;
 		const pendingPoints = Number(userInfo.totalPoints) - Number(userInfo.onchainPoints);
 		const pendingCases = userInfo.totalCompletedCases - userInfo.onchainCases;
@@ -115,7 +114,7 @@ function Dashboard({ applyStatus }: any) {
 		await getNonce();
 		let oracleSignature = '';
 		let points = [];
-		// 如果pending为空，则需要重新上链，如果不为空，则上链pending的数据
+		// pending is null，go onchain，is not null，go pending onchain
 		if (!pendingInfo.oracleSignature) {
 			const chainData = await onChainUpdate();
 			oracleSignature = chainData.oracleSignature;
@@ -177,7 +176,9 @@ function Dashboard({ applyStatus }: any) {
 						</span>
 						<span className="ml-[0.4rem]">
 							Points:&nbsp;&nbsp;
-							{address && userInfo ? Number(userInfo.totalPoints) - Number(userInfo.onchainPoints) : '-'}
+							{address && userInfo
+								? (Number(userInfo.totalPoints) - Number(userInfo.onchainPoints)).toFixed(1)
+								: '-'}
 						</span>
 					</span>
 					<span className="text-[0.14rem] text-[#999] leading-[0.16rem]">Pending Submits</span>
@@ -198,7 +199,7 @@ function Dashboard({ applyStatus }: any) {
 				</div>
 				<div className="flex flex-col justify-center items-center">
 					<span className="text-[0.16rem] text-[#000] leading-[0.24rem] h-[0.24rem]">
-						{address && userInfo ? Number(userInfo.onchainPoints).toFixed() : '-'}
+						{address && userInfo ? Number(userInfo.onchainPoints).toFixed(1) : '-'}
 					</span>
 					<span className="text-[0.14rem] text-[#999] leading-[0.16rem]">onChain Points</span>
 				</div>

@@ -11,7 +11,7 @@ function CountDown({ hours = 0, minutes = 0, seconds = 0, resetTime = function (
 	});
 
 	const tick = () => {
-		// 暂停，或已结束
+		// paused or over
 		if (paused || over) return;
 		if (time.hours === 0 && time.minutes === 0 && time.seconds === 0) setOver(true);
 		else if (time.minutes === 0 && time.seconds === 0)
@@ -33,7 +33,7 @@ function CountDown({ hours = 0, minutes = 0, seconds = 0, resetTime = function (
 				seconds: time.seconds - 1,
 			});
 	};
-	// 重置
+	// reset
 	const reset = () => {
 		setTime({
 			hours,

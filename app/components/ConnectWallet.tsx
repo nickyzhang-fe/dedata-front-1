@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-18 21:54:38
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-25 23:37:26
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-07-14 22:40:29
  * @FilePath: /dedata-front/app/components/ConnectWallet.tsx
  * @Description:
  */
@@ -12,7 +12,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 function ConnectWallet() {
 	const { openConnectModal } = useConnectModal();
 	return (
-		<div className="flex flex-1 flex-col justify-center items-center bg-[#fff] rounded-[.16rem]">
+		<div className="flex flex-1 flex-col justify-center items-center bg-[#fff] rounded-[.16rem] ml-[0.24rem]">
 			<div className="w-[1.6rem] h-[1.6rem]">
 				<Image src="/empty.png" alt="logo" width={0} height={0} className="w-full h-auto" priority />
 			</div>

@@ -1,7 +1,15 @@
+/*
+ * @Date: 2024-06-02 21:59:59
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-04 22:41:09
+ * @FilePath: /dedata-front/next.config.mjs
+ * @Description:
+ */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	output: 'export',
 	reactStrictMode: true,
+	trailingSlash: true,
 	images: {
 		unoptimized: true,
 	},
@@ -13,21 +21,6 @@ const nextConfig = {
 		config.externals.push('pino-pretty', 'encoding');
 		return config;
 	},
-	// async rewrites() {
-	// 	return [{ source: '/v1/:path*', destination: `http://127.0.0.1:3000/:path*` }];
-	// },
-	// async headers() {
-	// 	return [
-	// 		{
-	// 			source: '/:path*',
-	// 			headers: [
-	// 				{ key: 'Access-Control-Allow-Origin', value: '*' },
-	// 				{ key: 'Access-Control-Allow-Methods', value: 'GET,POST,OPTIONS' },
-	// 				{ key: 'Access-Control-Allow-Headers', value: 'Origin, X-Requested-With, Content-Type, Accept' },
-	// 			],
-	// 		},
-	// 	];
-	// },
 };
 
 export default nextConfig;

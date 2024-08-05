@@ -3,10 +3,8 @@
  * @LastEditors: nickyzhang zhangxia2013105@163.com
  * @LastEditTime: 2024-06-16 14:49:01
  * @FilePath: /dedata-front/app/hooks/useOnchainPoints.tsx
- * @Description: 通过合约方式上链数据
+ * @Description: set point through contract
  */
-import { useState, useEffect } from 'react';
-import { useSignMessage } from 'wagmi';
 import { useAccount, useWriteContract } from 'wagmi';
 import { contractABI, contractAddress } from '@/app/utils/contractABI';
 

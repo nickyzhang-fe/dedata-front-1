@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-07-09 22:19:08
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-03 23:36:30
  * @FilePath: /dedata-front/app/others/page.tsx
  * @Description:
  */
@@ -14,7 +14,7 @@ import { message } from 'antd';
 
 const ImageList = [
 	{
-		title: 'Feac Detection',
+		title: 'Face Detection',
 		subtitle: 'Segment an image into different parts',
 		icon: '/Face_Detection.jpg',
 	},

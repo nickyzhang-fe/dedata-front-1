@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-07-08 22:50:40
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-03 21:30:19
  * @FilePath: /dedata-front/app/components/SideBar.tsx
  * @Description:
  */
@@ -10,8 +10,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { message } from 'antd';
-import dearticle from '@/app/assets/image/icon-dearticle.png';
 import { ROUTERS } from '@/app/utils/constant';
 import { useState, useEffect } from 'react';
 import style from '@/app/style/sidebar.module.css';
@@ -20,12 +18,12 @@ function SideBar() {
 	const pathname = usePathname();
 
 	useEffect(() => {
-		if (pathname === '/') {
-			setIndex(0);
-		} else if (pathname === '/beta') {
+		if (pathname.indexOf('/beta') > -1) {
 			setIndex(1);
-		} else if (pathname === '/others') {
+		} else if (pathname.indexOf('/others') > -1) {
 			setIndex(2);
+		} else {
+			setIndex(0);
 		}
 	}, [pathname]);
 
@@ -44,14 +42,19 @@ function SideBar() {
 			}}
 		>
 			<div className="w-[0.16rem] h-[0.16rem]">
-				<Image
-					src="/icon-dearticle.png"
-					alt="DeArticle"
-					width={0}
-					height={0}
-					className="w-full h-full"
-					priority
-				/>
+				{tabIndex === 2 && (
+					<Image src="/other.jpg" alt="DeArticle" width={0} height={0} className="w-full h-full" priority />
+				)}
+				{tabIndex !== 2 && (
+					<Image
+						src="/icon-dearticle.png"
+						alt="DeArticle"
+						width={0}
+						height={0}
+						className="w-full h-full"
+						priority
+					/>
+				)}
 			</div>
 			<Link className="ml-[0.08rem]" href={router.route}>
 				{router.title}

@@ -3,13 +3,13 @@
  * @LastEditors: nickyzhang zhangxia2013105@163.com
  * @LastEditTime: 2024-06-27 23:41:00
  * @FilePath: /dedata-front/app/components/Maker.tsx
- * @Description: 同时满足 role值为1、address存在、applyStatus值为true时才会加载接口数据
+ * @Description: Satisfy at the same time role=1、address exist、applyStatus=true loading data
  */
 'use client';
 
 import { Input, message } from 'antd';
 import { useEffect, useState } from 'react';
-import { useAccount, useReadContract, useSignMessage } from 'wagmi';
+import { useAccount, useSignMessage } from 'wagmi';
 import { getMakerInfo, createMakerInfo } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
 const { TextArea } = Input;
@@ -55,7 +55,7 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 		}
 	}, [address, roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange]);
 	/**
-	 * @description: 校验保存参数
+	 * @description: verify save parameters
 	 */
 	async function validatorMaker() {
 		console.log('submit', abstract.length, languageStatus);

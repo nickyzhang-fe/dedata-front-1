@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-16 08:37:23
+ * @LastEditTime: 2024-06-25 23:01:58
  * @FilePath: /dedata-front/app/page.tsx
  * @Description:
  */
@@ -23,6 +23,9 @@ export default function Home() {
 
 	const [languageStatus, setLanguageStatus] = useState('en');
 	const [roleStatus, setRoleStatus] = useState(1);
+
+	const [minutes, setMinutes] = useState(10);
+	const [seconds, setSeconds] = useState(0);
 	// 申请状态，true代表有case，false代表case完成或者未开始
 	const [applyStatus, setApplyStatus] = useState(false);
 
@@ -60,6 +63,16 @@ export default function Home() {
 	function onApplyChange(status: boolean) {
 		console.log('接收status', status);
 		setApplyStatus(status);
+		setMinutes(10);
+		setSeconds(0);
+	}
+	/**
+	 * 获取过期时间
+	 */
+	function onExpiredTimeChange(time: any) {
+		const { minutes, seconds } = time;
+		setMinutes(minutes);
+		setSeconds(seconds);
 	}
 	/**
 	 * 保存
@@ -67,7 +80,6 @@ export default function Home() {
 	function onSaveChange() {
 		setApplyStatus(false);
 	}
-	console.log(address);
 
 	if (!address) {
 		return <ConnectWallet />;
@@ -84,6 +96,8 @@ export default function Home() {
 					languageStatus={languageStatus}
 					onApplyChange={onApplyChange}
 					onRoleAndLanguageChange={onRoleAndLanguageChange}
+					minutes={minutes}
+					seconds={seconds}
 				/>
 				<Empty
 					applyStatus={applyStatus}
@@ -97,12 +111,14 @@ export default function Home() {
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}
 					onSaveChange={onSaveChange}
+					onExpiredTimeChange={onExpiredTimeChange}
 				/>
 				<Checker
 					roleStatus={roleStatus}
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}
 					onSaveChange={onSaveChange}
+					onExpiredTimeChange={onExpiredTimeChange}
 				/>
 			</div>
 		</div>

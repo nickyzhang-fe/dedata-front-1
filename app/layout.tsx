@@ -54,7 +54,7 @@ export default function RootLayout({
 				<AntdRegistry>
 					<Providers>
 						<NavBar />
-						<div className="flex h-[calc(100vh-0.8rem)] w-full p-[0.24rem]">
+						<div className="flex h-[calc(100vh-0.8rem)] w-full p-[0.16rem]">
 							<SideBar />
 							<div className="flex-1 flex ml-[0.24rem]">{children}</div>
 						</div>

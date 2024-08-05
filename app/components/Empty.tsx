@@ -18,7 +18,7 @@ function Empty(props: any) {
 	function onChange() {
 		console.log('Click', props);
 		if (!isConnected) {
-			message.info('请先登陆钱包');
+			message.info('Please connect wallet first');
 			return;
 		}
 		setVisible(true);

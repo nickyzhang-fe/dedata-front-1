@@ -5,20 +5,17 @@
  * @FilePath: /dedata-front/app/wagmi.tsx
  * @Description:
  */
+// @ts-nocheck
 import { arbitrum, base, mainnet, optimism, polygon, bscTestnet } from 'wagmi/chains';
 import { getDefaultWallets, getDefaultConfig } from '@rainbow-me/rainbowkit';
 
 const { wallets } = getDefaultWallets();
 
 const newBscTestnet = {
-	...bscTestnet,
+	...(bscTestnet as any),
 	rpcUrls: {
-		...bscTestnet.rpcUrls,
 		default: {
-			http: ['https://bsc-prebsc-dataseed.bnbchain.org'],
-		},
-		public: {
-			http: ['https://bsc-prebsc-dataseed.bnbchain.org'],
+			http: ['https://bsc-testnet-dataseed.bnbchain.org'],
 		},
 	},
 };
@@ -27,12 +24,9 @@ export const config = getDefaultConfig({
 	appName: 'Dedata',
 	projectId: 'e29013f230e24e5306ff14ac99f55ea1',
 	chains: [
-		mainnet,
-		polygon,
-		optimism,
-		arbitrum,
-		base,
-		...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [newBscTestnet] : []),
+		...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
+			? [newBscTestnet]
+			: [mainnet, polygon, optimism, arbitrum, base]),
 	],
 	ssr: true,
 });

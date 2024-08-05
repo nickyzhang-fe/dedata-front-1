@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-17 21:46:18
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-04 22:31:11
  * @FilePath: /dedata-front/app/components/Checker.tsx
  * @Description:
  */
@@ -11,13 +11,12 @@ import { useAccount, useReadContract, useSignMessage } from 'wagmi';
 import { Input, message, Radio } from 'antd';
 import { useEffect, useState } from 'react';
 import { getCheckerInfo, createCheckerInfo } from '@/app/lib/api';
-import useNonce from '@/app/hooks/useNonce';
 import { SUCCESS_CODE } from '@/app/utils/constant';
 import type { RadioChangeEvent } from 'antd';
 
 const { TextArea } = Input;
 
-function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange }: any) {
+function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange, type }: any) {
 	const [checkerInfo, setCheckerInfo] = useState({
 		content: '',
 		makeList: [],
@@ -29,12 +28,22 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange }: any)
 
 	useEffect(() => {
 		async function loadData() {
-			const { code, data, msg } = await getCheckerInfo(address, languageStatus);
-			console.log(code, data, msg);
+			const dataType = type === 'alpha' ? 1 : 2;
+			const { code, data, msg } = await getCheckerInfo(address, languageStatus, dataType);
+			// console.log(code, data, msg);
 			if (code === SUCCESS_CODE) {
+				const { content, expiredTime } = data;
 				setCheckerInfo({
 					...data,
-					content: data.content.replace('\n', '<br>') || '',
+					content: content.replace('\n', '<br>') || '',
+				});
+				const timeDis = (expiredTime - Math.floor(Date.now())) / 1000;
+				if (timeDis < 0) return;
+				const minutes = Math.floor(timeDis / 60);
+				const seconds = Math.floor(timeDis % 60);
+				onExpiredTimeChange({
+					minutes,
+					seconds,
 				});
 			} else {
 				message.error(msg);
@@ -46,12 +55,11 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange }: any)
 		if (address && roleStatus === 2 && applyStatus) {
 			loadData();
 		}
-	}, [roleStatus, address, applyStatus, languageStatus, onSaveChange]);
+	}, [roleStatus, address, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange, type]);
 	/**
-	 * @description: 校验保存参数
+	 * @description: verify save parameters
 	 */
-	async function validatorMaker() {
-		console.log('submit', languageStatus);
+	async function validatorChecker() {
 		if (!makerId) {
 			message.info('Please finish current case');
 			return;
@@ -92,7 +100,10 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange }: any)
 			<Radio.Group onChange={onRadioGroupChange}>
 				{checkerInfo?.makeList.map((item: any, index) => {
 					return (
-						<div className="bg-[#F5F7FA] p-[0.24rem] rounded-[0.16rem] mb-[0.16rem]" key={index}>
+						<div
+							className="bg-[#F5F7FA] px-[0.2rem] py-[0.08rem] rounded-[0.16rem] mb-[0.1rem]"
+							key={index}
+						>
 							<Radio value={item.id}>{item.content}</Radio>
 						</div>
 					);
@@ -100,24 +111,26 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange }: any)
 			</Radio.Group>
 		);
 		return (
-			<div className="h-[calc(100%-0.4rem)] pt-[0.24rem]">
-				<div className="flex flex-col h-[calc(100%-0.4rem)] overflow-y-auto mb-[0.84rem]">
-					<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
-						Original Article
-					</span>
+			<div className="h-[calc(100%-0.4rem)] pt-[0.16rem]">
+				<div className="flex flex-col h-full overflow-y-auto">
+					<span className="text-[#000] text-[0.14rem] font-bold mb-[0.14rem]">Original Article</span>
 					<div
 						className="text-[#000] text-[0.14rem] leading-[0.22rem] bg-[#F5F7FA] px-[0.24rem] py-[0.16rem] rounded-[0.16rem]"
 						dangerouslySetInnerHTML={{ __html: checkerInfo?.content }}
 					/>
-					<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">Abstract</span>
+					<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+						Abstract
+						<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+							（Choose the best summary of the news）
+						</span>
+					</span>
 					{checkerArr}
-				</div>
-
-				<div
-					className="absolute left-[0.24rem] bottom-[0.14rem] w-[2rem] h-[0.6rem] bg-[#3A54DF] text-[#fff] rounded-[0.16rem] leading-[0.6rem] text-center font-bold text-[0.24rem] mt-[0.24rem] cursor-pointer"
-					onClick={validatorMaker}
-				>
-					Save
+					<div
+						className="w-[2rem] h-[0.48rem] bg-[#3A54DF] text-[#fff] rounded-[0.16rem] leading-[0.48rem] text-center font-bold text-[0.18rem] mt-[0.08rem] cursor-pointer"
+						onClick={validatorChecker}
+					>
+						Save
+					</div>
 				</div>
 			</div>
 		);

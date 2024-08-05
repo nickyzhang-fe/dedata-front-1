@@ -1,13 +1,13 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-16 08:37:23
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-04 22:38:26
  * @FilePath: /dedata-front/app/page.tsx
  * @Description:
  */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ContentHeader from '@/app/components/ContentHeader';
 import Empty from '@/app/components/Empty';
 import Maker from '@/app/components/Maker';
@@ -16,25 +16,26 @@ import { useAccount } from 'wagmi';
 import { getPendingCase } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
 import Dashboard from '@/app/components/Dashboard';
-import ConnectWallet from '@/app/components/ConnectWallet';
 
 export default function Home() {
 	const { address, isConnected } = useAccount();
 
 	const [languageStatus, setLanguageStatus] = useState('en');
 	const [roleStatus, setRoleStatus] = useState(1);
-	// 申请状态，true代表有case，false代表case完成或者未开始
+
+	const [minutes, setMinutes] = useState(10);
+	const [seconds, setSeconds] = useState(0);
+	// apply status，true: has case，false: no case or not start
 	const [applyStatus, setApplyStatus] = useState(false);
 
 	useEffect(() => {
 		async function loadData() {
 			const { code, data, msg } = await getPendingCase(address);
-			console.log('----->page', code, data, msg);
 			if (code === SUCCESS_CODE) {
 				if (!data.isExist) {
 					setApplyStatus(false);
 				} else {
-					// taskType 区分1：maker or 2：checker
+					// taskType 1：maker or 2：checker
 					setLanguageStatus(data.pendingCase.language);
 					setRoleStatus(data.pendingCase.taskType);
 					setApplyStatus(true);
@@ -46,32 +47,38 @@ export default function Home() {
 		}
 	}, [address]);
 	/**
-	 * 角色和语言状态改变
+	 * role ro language status change
 	 */
-	function onRoleAndLanguageChange(params: any) {
-		console.log('roles and language status', params);
+	const onRoleAndLanguageChange = useCallback((params: any) => {
 		const { languageStatus, roleStatus } = params;
 		setLanguageStatus(languageStatus);
 		setRoleStatus(roleStatus);
-	}
+	}, []);
 	/**
-	 * 当前是否有任务状态改变
+	 * task status change
 	 */
 	function onApplyChange(status: boolean) {
-		console.log('接收status', status);
+		console.log('onApplyChange', status);
 		setApplyStatus(status);
+		setMinutes(10);
+		setSeconds(0);
 	}
 	/**
-	 * 保存
+	 * get expired time
 	 */
-	function onSaveChange() {
+	const onExpiredTimeChange = useCallback((time: any) => {
+		const { minutes, seconds } = time;
+		setMinutes(minutes);
+		setSeconds(seconds);
+	}, []);
+	/**
+	 * save
+	 */
+	const onSaveChange = useCallback(() => {
+		console.log('onSaveChange');
 		setApplyStatus(false);
-	}
-	console.log(address);
+	}, []);
 
-	if (!address) {
-		return <ConnectWallet />;
-	}
 	return (
 		<div className="flex flex-col flex-1 w-full overflow-hidden relative">
 			<Dashboard applyStatus={applyStatus} />
@@ -84,6 +91,8 @@ export default function Home() {
 					languageStatus={languageStatus}
 					onApplyChange={onApplyChange}
 					onRoleAndLanguageChange={onRoleAndLanguageChange}
+					minutes={minutes}
+					seconds={seconds}
 				/>
 				<Empty
 					applyStatus={applyStatus}
@@ -97,12 +106,15 @@ export default function Home() {
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}
 					onSaveChange={onSaveChange}
+					onExpiredTimeChange={onExpiredTimeChange}
 				/>
 				<Checker
+					type="alpha"
 					roleStatus={roleStatus}
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}
 					onSaveChange={onSaveChange}
+					onExpiredTimeChange={onExpiredTimeChange}
 				/>
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-16 09:42:51
+ * @LastEditTime: 2024-06-17 21:46:18
  * @FilePath: /dedata-front/app/components/Checker.tsx
  * @Description:
  */
@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { getCheckerInfo, createCheckerInfo } from '@/app/lib/api';
 import useNonce from '@/app/hooks/useNonce';
 import { SUCCESS_CODE } from '@/app/utils/constant';
+import type { RadioChangeEvent } from 'antd';
 
 const { TextArea } = Input;
 
@@ -52,7 +53,7 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange }: any)
 	async function validatorMaker() {
 		console.log('submit', languageStatus);
 		if (!makerId) {
-			message.info('请先选择正确答案');
+			message.info('Please finish current case');
 			return;
 		}
 		onSubmit();
@@ -89,11 +90,11 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange }: any)
 	if (roleStatus === 2 && applyStatus) {
 		const checkerArr = (
 			<Radio.Group onChange={onRadioGroupChange}>
-				{checkerInfo?.makeList.map((item, index) => {
+				{checkerInfo?.makeList.map((item: any, index) => {
 					return (
-						<Radio value={item.id} key={index}>
-							{item.content}
-						</Radio>
+						<div className="bg-[#F5F7FA] p-[0.24rem] rounded-[0.16rem] mb-[0.16rem]" key={index}>
+							<Radio value={item.id}>{item.content}</Radio>
+						</div>
 					);
 				})}
 			</Radio.Group>

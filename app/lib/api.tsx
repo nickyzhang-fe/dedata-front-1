@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-10 08:18:56
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-11 23:31:34
+ * @LastEditTime: 2024-06-16 11:26:01
  * @FilePath: /dedata-front/app/lib/api.tsx
  * @Description:
  */
@@ -81,4 +81,12 @@ export async function createCheckerInfo(body: any) {
 		method: 'POST',
 		body: JSON.stringify(body),
 	});
+}
+/**
+ * @description: 获取pendingonchain
+ * @param {*} address
+ * @return {*}
+ */
+export async function getPendingOnchainTransactions(address: string = '') {
+	return fetcher(`/v1/points/pending-onchain-transactions?address=${address}`);
 }

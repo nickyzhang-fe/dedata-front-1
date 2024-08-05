@@ -16,6 +16,7 @@ import { useAccount } from 'wagmi';
 import { getPendingCase } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
 import Dashboard from '@/app/components/Dashboard';
+import ConnectWallet from '@/app/components/ConnectWallet';
 
 export default function Home() {
 	const { address, isConnected } = useAccount();
@@ -66,7 +67,11 @@ export default function Home() {
 	function onSaveChange() {
 		setApplyStatus(false);
 	}
+	console.log(address);
 
+	if (!address) {
+		return <ConnectWallet />;
+	}
 	return (
 		<div className="flex flex-col flex-1 w-full overflow-hidden relative">
 			<Dashboard applyStatus={applyStatus} />

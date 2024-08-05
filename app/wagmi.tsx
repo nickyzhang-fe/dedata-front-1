@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-08 06:21:25
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-16 09:07:15
+ * @LastEditTime: 2024-06-17 21:48:21
  * @FilePath: /dedata-front/app/wagmi.tsx
  * @Description:
  */
@@ -26,7 +26,6 @@ const newBscTestnet = {
 export const config = getDefaultConfig({
 	appName: 'Dedata',
 	projectId: 'e29013f230e24e5306ff14ac99f55ea1',
-	icons: ['https://avatars.githubusercontent.com/u/37784886'],
 	chains: [
 		mainnet,
 		polygon,

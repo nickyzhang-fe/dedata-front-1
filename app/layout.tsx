@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-08 22:29:47
+ * @LastEditTime: 2024-06-15 22:41:01
  * @FilePath: /dedata-front/app/layout.tsx
  * @Description:
  */
@@ -10,7 +10,6 @@ import '@rainbow-me/rainbowkit/styles.css';
 import '@/app/style/index.scss';
 import NavBar from '@/app/components/NavBar';
 import SideBar from '@/app/components/SideBar';
-import Dashboard from '@/app/components/Dashboard';
 import { Providers } from './providers';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 
@@ -37,6 +36,9 @@ export default function RootLayout({
                             var html = document.getElementsByTagName("html")[0];
                             var designSize = 1440;
                             var clientWidth = document.documentElement.clientWidth;
+							if (clientWidth < 1000) {
+                                clientWidth = 1000;
+                            }
                             var rem = (clientWidth * 100) / designSize;
                             html.style.fontSize = rem + "px";
                         }
@@ -51,10 +53,7 @@ export default function RootLayout({
 						<NavBar />
 						<div className="flex h-[calc(100vh-0.8rem)] w-full p-[0.24rem]">
 							<SideBar />
-							<div className="flex-1 flex flex-col ml-[0.24rem]">
-								<Dashboard />
-								{children}
-							</div>
+							<div className="flex-1 flex ml-[0.24rem]">{children}</div>
 						</div>
 					</Providers>
 				</AntdRegistry>

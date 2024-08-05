@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-10 10:04:30
+ * @LastEditTime: 2024-06-16 08:34:47
  * @FilePath: /dedata-front/app/components/ContentHeader.tsx
  * @Description:
  */
@@ -20,14 +20,24 @@ function ContentHeader(props: any) {
 
 	useEffect(() => {
 		setDisabled(props.disabled);
-	}, [props.disabled]);
+		setLanguageStatus(props.languageStatus);
+		setRoleStatus(props.roleStatus);
+	}, [props.disabled, props.roleStatus, props.languageStatus]);
 
 	function languageChange(value: string) {
 		setLanguageStatus(value);
+		props.onRoleAndLanguageChange({
+			languageStatus: value,
+			roleStatus,
+		});
 	}
 
 	function roleChange(value: number) {
 		setRoleStatus(value);
+		props.onRoleAndLanguageChange({
+			languageStatus,
+			roleStatus: value,
+		});
 	}
 
 	function applyCaseChange() {
@@ -41,10 +51,6 @@ function ContentHeader(props: any) {
 			return;
 		}
 		props.onApplyChange(true);
-		props.onRoleAndLanguageChange({
-			languageStatus,
-			roleStatus,
-		});
 	}
 
 	return (
@@ -52,7 +58,7 @@ function ContentHeader(props: any) {
 			<span className="text-[0.16rem] font-bold text-[#000]">{props.title}</span>
 			<div className="flex items-center h-[0.4rem]">
 				<Select
-					defaultValue={'en'}
+					value={languageStatus}
 					style={{ width: '1.5rem', height: '0.4rem' }}
 					onChange={languageChange}
 					options={LANGUAGES}
@@ -60,7 +66,7 @@ function ContentHeader(props: any) {
 				/>
 				<span className="text-[0.14rem] text-[#333] ml-[0.1rem]">Role:</span>
 				<Select
-					defaultValue={1}
+					value={roleStatus}
 					style={{ width: '1.5rem', height: '0.4rem' }}
 					onChange={roleChange}
 					options={ROLES}

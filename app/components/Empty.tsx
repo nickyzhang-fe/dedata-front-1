@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-08 06:44:54
+ * @LastEditTime: 2024-06-16 08:37:30
  * @FilePath: /dedata-front/app/components/Empty.tsx
  * @Description:
  */
@@ -16,17 +16,13 @@ function Empty(props: any) {
 	const [visible, setVisible] = useState(false);
 	const { isConnected } = useAccount();
 	function onChange() {
-		console.log('Click');
+		console.log('Click', props);
 		if (!isConnected) {
 			message.info('请先登陆钱包');
 			return;
 		}
 		setVisible(true);
 		props.onApplyChange(true);
-		props.onRoleAndLanguageChange({
-			languageStatus: props.languageStatus,
-			roleStatus: props.roleStatus,
-		});
 	}
 
 	useEffect(() => {

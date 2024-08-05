@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"*.scss": "tailwindcss"
+	},
+	"svn.ignoreMissingSvnWarning": true,
+	"editor.formatOnSave": true
+}

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-06-02 23:24:21
+ * @LastEditors: nickyzhang zhangxia2013105@163.com
+ * @LastEditTime: 2024-06-09 07:19:37
  * @FilePath: /dedata-front/app/page.tsx
  * @Description:
  */
@@ -12,10 +12,14 @@ import ContentHeader from '@/app/components/ContentHeader';
 import Empty from '@/app/components/Empty';
 import Maker from '@/app/components/Maker';
 import Checker from '@/app/components/Checker';
+import { useAccount } from 'wagmi';
 
 export default function Home() {
+	const { address, isConnected } = useAccount();
+
 	const [languageStatus, setLanguageStatus] = useState(1);
 	const [roleStatus, setRoleStatus] = useState(1);
+	// 申请状态，true代表有case，false代表case完成或者未开始
 	const [applyStatus, setApplyStatus] = useState(false);
 	function onRoleAndLanguageChange(params: any) {
 		console.log('roles and language status', params);
@@ -30,8 +34,8 @@ export default function Home() {
 	}
 
 	function onSaveChange() {
-        setApplyStatus(false)
-    }
+		setApplyStatus(false);
+	}
 
 	function getData() {
 		console.log('----->languageStatus', languageStatus);
@@ -51,6 +55,7 @@ export default function Home() {
 				onApplyChange={onApplyChange}
 				roleStatus={roleStatus}
 				languageStatus={languageStatus}
+				onRoleAndLanguageChange={onRoleAndLanguageChange}
 			/>
 			<Maker
 				roleStatus={roleStatus}

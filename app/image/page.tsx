@@ -1,8 +1,8 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-09 22:33:49
- * @FilePath: /dedata-front/app/page.tsx
+ * @LastEditTime: 2024-08-09 22:33:23
+ * @FilePath: /dedata-front/app/image/page.tsx
  * @Description:
  */
 'use client';
@@ -18,7 +18,7 @@ import { SUCCESS_CODE } from '@/app/utils/constant';
 import Dashboard from '@/app/components/Dashboard';
 
 export default function Home() {
-	const { address, isConnected } = useAccount();
+	const { address } = useAccount();
 
 	const [languageStatus, setLanguageStatus] = useState('en');
 	const [roleStatus, setRoleStatus] = useState(1);
@@ -30,7 +30,8 @@ export default function Home() {
 
 	useEffect(() => {
 		async function loadData() {
-			const { code, data, msg } = await getPendingCase(address);
+			const { code, data } = await getPendingCase(address, 3);
+
 			if (code === SUCCESS_CODE) {
 				if (!data.isExist) {
 					setApplyStatus(false);
@@ -100,7 +101,7 @@ export default function Home() {
 					onRoleAndLanguageChange={onRoleAndLanguageChange}
 				/>
 				<Maker
-					type="1"
+					type="3"
 					roleStatus={roleStatus}
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}
@@ -108,7 +109,7 @@ export default function Home() {
 					onExpiredTimeChange={onExpiredTimeChange}
 				/>
 				<Checker
-					type="1"
+					type="3"
 					roleStatus={roleStatus}
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}

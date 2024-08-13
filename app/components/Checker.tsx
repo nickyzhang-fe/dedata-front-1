@@ -1,36 +1,36 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-04 22:31:11
+ * @LastEditTime: 2024-08-11 09:27:38
  * @FilePath: /dedata-front/app/components/Checker.tsx
  * @Description:
  */
 'use client';
 
-import { useAccount, useReadContract, useSignMessage } from 'wagmi';
-import { Input, message, Radio } from 'antd';
+import { useAccount, useSignMessage } from 'wagmi';
+import { message, Radio } from 'antd';
 import { useEffect, useState } from 'react';
 import { getCheckerInfo, createCheckerInfo } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
 import type { RadioChangeEvent } from 'antd';
-
-const { TextArea } = Input;
-
+import Image from 'next/image';
 function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange, type }: any) {
+	// type 1: alpha 2: beta 3: image
 	const [checkerInfo, setCheckerInfo] = useState({
 		content: '',
 		makeList: [],
+		type: 1,
+		imageUrl: '',
 	});
 
 	const [makerId, setMakerId] = useState(null);
-	const { address, isConnected } = useAccount();
+	const { address } = useAccount();
 	const { signMessageAsync } = useSignMessage();
 
 	useEffect(() => {
 		async function loadData() {
-			const dataType = type === 'alpha' ? 1 : 2;
-			const { code, data, msg } = await getCheckerInfo(address, languageStatus, dataType);
-			// console.log(code, data, msg);
+			const { code, data, msg } = await getCheckerInfo(address, languageStatus, type);
+			console.log('-------checker', code, data, msg);
 			if (code === SUCCESS_CODE) {
 				const { content, expiredTime } = data;
 				setCheckerInfo({
@@ -61,7 +61,13 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpi
 	 */
 	async function validatorChecker() {
 		if (!makerId) {
-			message.info('Please finish current case');
+			let msg = '';
+			if (Number(type) === 3) {
+				msg = 'Please choose the best the caption for image';
+			} else {
+				msg = 'Please finish current case';
+			}
+			message.info(msg);
 			return;
 		}
 		onSubmit();
@@ -113,17 +119,41 @@ function Checker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpi
 		return (
 			<div className="h-[calc(100%-0.4rem)] pt-[0.16rem]">
 				<div className="flex flex-col h-full overflow-y-auto">
-					<span className="text-[#000] text-[0.14rem] font-bold mb-[0.14rem]">Original Article</span>
-					<div
-						className="text-[#000] text-[0.14rem] leading-[0.22rem] bg-[#F5F7FA] px-[0.24rem] py-[0.16rem] rounded-[0.16rem]"
-						dangerouslySetInnerHTML={{ __html: checkerInfo?.content }}
-					/>
-					<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
-						Abstract
-						<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
-							（Choose the best summary of the news）
-						</span>
+					<span className="text-[#000] text-[0.14rem] font-bold mb-[0.14rem]">
+						{checkerInfo?.type === 3 ? 'Original Image' : 'Original Article'}
 					</span>
+
+					{checkerInfo?.type === 3 ? (
+						<Image
+							src={checkerInfo?.imageUrl}
+							alt="logo"
+							width={0}
+							height={0}
+							className="w-[2.4rem] h-[2.4rem] mx-auto my-0 object-cover"
+							priority
+						/>
+					) : (
+						<div
+							className="text-[#000] text-[0.14rem] leading-[0.22rem] bg-[#F5F7FA] px-[0.24rem] py-[0.16rem] rounded-[0.16rem]"
+							dangerouslySetInnerHTML={{ __html: checkerInfo?.content }}
+						/>
+					)}
+					{checkerInfo?.type === 3 ? (
+						<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+							Description
+							<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+								（Choose the best caption for the Image）
+							</span>
+						</span>
+					) : (
+						<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+							Abstract
+							<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+								（Choose the best summary of the news）
+							</span>
+						</span>
+					)}
+
 					{checkerArr}
 					<div
 						className="w-[2rem] h-[0.48rem] bg-[#3A54DF] text-[#fff] rounded-[0.16rem] leading-[0.48rem] text-center font-bold text-[0.18rem] mt-[0.08rem] cursor-pointer"

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-04 22:25:18
+ * @LastEditTime: 2024-08-07 23:08:17
  * @FilePath: /dedata-front/app/beta/page.tsx
  * @Description:
  */
@@ -10,7 +10,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import ContentHeader from '@/app/components/ContentHeader';
 import Empty from '@/app/components/Empty';
-import Maker from '@/app/components/Maker';
 import Checker from '@/app/components/Checker';
 import { useAccount } from 'wagmi';
 import { getPendingCase } from '@/app/lib/api';
@@ -18,7 +17,7 @@ import { SUCCESS_CODE } from '@/app/utils/constant';
 import Dashboard from '@/app/components/Dashboard';
 
 export default function Beta() {
-	const { address, isConnected } = useAccount();
+	const { address } = useAccount();
 
 	const [languageStatus, setLanguageStatus] = useState('en');
 	const [minutes, setMinutes] = useState(10);
@@ -97,7 +96,7 @@ export default function Beta() {
 					onRoleAndLanguageChange={onRoleAndLanguageChange}
 				/>
 				<Checker
-					type="beta"
+					type="2"
 					roleStatus={2}
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}

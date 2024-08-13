@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 23:24:06
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-27 23:41:00
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-11 09:28:35
  * @FilePath: /dedata-front/app/components/Maker.tsx
  * @Description: Satisfy at the same time role=1、address exist、applyStatus=true loading data
  */
@@ -12,22 +12,27 @@ import { useEffect, useState } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
 import { getMakerInfo, createMakerInfo } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
+import Image from 'next/image';
+
 const { TextArea } = Input;
 
-function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange }: any) {
+function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange, type }: any) {
+	// type 1: alpha 3: image
 	const [makerInfo, setMakerInfo] = useState({
 		id: 0,
 		content: '',
+		type: 1,
+		imageUrl: '',
 	});
 	const [abstract, setAbstract] = useState('');
 
-	const { address, isConnected } = useAccount();
+	const { address } = useAccount();
 	const { signMessageAsync } = useSignMessage();
 
 	useEffect(() => {
 		async function loadData() {
-			const { code, data, msg } = await getMakerInfo(address, languageStatus);
-			// console.log(code, data, msg);
+			const { code, data, msg } = await getMakerInfo(address, languageStatus, type);
+			console.log('------->maker', code, data, msg);
 			if (code === SUCCESS_CODE) {
 				const { content, expiredTime } = data;
 				setMakerInfo({
@@ -50,23 +55,25 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 			}
 		}
 		if (address && roleStatus === 1 && applyStatus) {
-			console.log('loadData');
 			loadData();
 		}
-	}, [address, roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange]);
+	}, [address, roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange, type]);
 	/**
 	 * @description: verify save parameters
 	 */
 	async function validatorMaker() {
-		console.log('submit', abstract.length, languageStatus);
+		// console.log('submit', abstract.length, languageStatus);
+		const msg = `Please enter ${
+			Number(type) === 3 ? 'the captions for images' : 'the news abstract'
+		}, suggest less than 20 words`;
 		if (languageStatus === 'en') {
-			if (abstract.length < 30) {
-				message.info('Please enter the news abstract, suggest less than 30 words');
+			if (abstract.length < 20) {
+				message.info(msg);
 				return;
 			}
 		} else {
 			if (abstract.length < 5) {
-				message.info('Please enter the news abstract, suggest less than 30 words');
+				message.info(msg);
 				return;
 			}
 		}
@@ -92,6 +99,8 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 				setMakerInfo({
 					id: 0,
 					content: '',
+					type: 1,
+					imageUrl: '',
 				});
 			}, 2000);
 		} else {
@@ -103,17 +112,41 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 		return (
 			<div className="h-[calc(100%-0.4rem)] pt-[0.16rem]">
 				<div className="flex flex-col h-full overflow-y-auto">
-					<span className="text-[#000] text-[0.14rem] font-bold mb-[0.14rem]">Original Article</span>
-					<div
-						className="text-[#000] text-[0.14rem] leading-[0.22rem] bg-[#F5F7FA] px-[0.24rem] py-[0.16rem] rounded-[0.16rem]"
-						dangerouslySetInnerHTML={{ __html: makerInfo?.content }}
-					/>
-					<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
-						Abstract
-						<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
-							（Summarize the news, no more than 15 words）
-						</span>
+					<span className="text-[#000] text-[0.14rem] font-bold mb-[0.14rem]">
+						{makerInfo?.type === 3 ? 'Original Image' : 'Original Article'}
 					</span>
+					{makerInfo.type === 1 && (
+						<div
+							className="text-[#000] text-[0.14rem] leading-[0.22rem] bg-[#F5F7FA] px-[0.24rem] py-[0.16rem] rounded-[0.16rem]"
+							dangerouslySetInnerHTML={{ __html: makerInfo?.content }}
+						/>
+					)}
+					{makerInfo.type === 3 && (
+						<Image
+							src={makerInfo?.imageUrl}
+							alt="logo"
+							width={0}
+							height={0}
+							className="w-[2.4rem] h-[2.4rem] mx-auto my-0 object-cover"
+							priority
+						/>
+					)}
+					{makerInfo.type === 1 && (
+						<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+							Abstract
+							<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+								（Summarize the news, no more than 15 words）
+							</span>
+						</span>
+					)}
+					{makerInfo.type === 3 && (
+						<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+							Description
+							<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+								（Generate captions for images, no more than 20 words)
+							</span>
+						</span>
+					)}
 					<TextArea
 						className="text-[#000] !text-[0.14rem] !leading-[0.22rem] !bg-[#F5F7FA] !px-[calc(0.24rem-11px)] !py-[calc(0.14rem-4px)] rounded-[0.16rem] !shadow-none !border-none !focus:bg-[#F5F7FA] !hover:border-none !hover:bg-[#F5F7FA] !focus:border-none !focus:shadow-none"
 						placeholder="Please input..."

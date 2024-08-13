@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-10 08:18:56
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-04 22:35:44
+ * @LastEditTime: 2024-08-09 22:35:35
  * @FilePath: /dedata-front/app/lib/api.tsx
  * @Description:
  */
@@ -29,6 +29,7 @@ export async function updatePoints(body: any) {
 /**
  * @description: get user task status
  * @param {*} address
+ * @param {*} type 1: alpha 2: beta 3: image
  * @return {*}
  */
 export async function getPendingCase(address: string = '', type: number = 1) {
@@ -39,13 +40,13 @@ export async function getPendingCase(address: string = '', type: number = 1) {
  * @param {*} address
  * @return {*}
  */
-export async function getMakerInfo(address: string = '', lang: string = 'en') {
+export async function getMakerInfo(address: string = '', lang: string = 'en', type: number = 1) {
 	const option = {
 		headers: {
 			lang,
 		},
 	};
-	return fetcher(`/v1/cases/make-case?address=${address}`, option);
+	return fetcher(`/v1/cases/make-case?address=${address}&type=${type}`, option);
 }
 /**
  * @description: create maker info

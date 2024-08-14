@@ -7,7 +7,6 @@
  */
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import style from '@/app/style/others.module.css';
 import { message } from 'antd';

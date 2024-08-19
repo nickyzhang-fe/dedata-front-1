@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-14 23:16:13
+ * @LastEditTime: 2024-08-15 22:42:02
  * @FilePath: /dedata-front/app/components/SideBar.tsx
  * @Description:
  */
@@ -31,11 +31,11 @@ function SideBar() {
 	for (const [key, value] of Object.entries(MENUS)) {
 		menus.push(
 			<div key={key}>
-				<div className="text-[0.16rem] leading-[0.21rem] my-[0.26rem]">{key}</div>
+				<div className="text-[0.16rem] leading-[0.20rem] my-[0.20rem]">{key}</div>
 				{value.map((router) => (
 					<div
 						key={router.id}
-						className={`w-full h-[0.48rem] rounded-[0.16rem] flex flex-row items-center pl-[0.16rem] text-[0.14rem] text-[#000] mb-[0.1rem] relative z-1 ${
+						className={`w-full h-[0.36rem] rounded-[0.16rem] flex flex-row items-center pl-[0.16rem] text-[0.14rem] text-[#000] mb-[0.1rem] relative z-1 ${
 							path === router.route ? 'font-bold bg-[#fff]' : null
 						}`}
 					>

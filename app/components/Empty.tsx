@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-06-16 08:37:30
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-15 22:36:31
  * @FilePath: /dedata-front/app/components/Empty.tsx
  * @Description:
  */
@@ -36,7 +36,9 @@ function Empty(props: any) {
 			<div className="w-[1.6rem] h-[1.6rem]">
 				<Image src="/empty.png" alt="logo" width={0} height={0} className="w-full h-auto" priority />
 			</div>
-			<span className="text-[0.16rem] leading-[0.21rem] mb-[0.26rem] -mt-[0.2rem]">Click to apply new cases</span>
+			<span className="text-[0.16rem] leading-[0.21rem] mb-[0.26rem] -mt-[0.2rem]">
+				{props.emptyText ? props.emptyText : 'Summarize news abstract to earn'}
+			</span>
 			<div
 				className="bg-[#3A54DF] h-[0.6rem] w-[2rem] text-[0.16rem] rounded-[0.16rem] text-[#fff] text-center leading-[0.6rem] cursor-pointer font-bold"
 				onClick={onChange}

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-14 23:10:16
+ * @LastEditTime: 2024-08-15 22:51:04
  * @FilePath: /dedata-front/app/utils/constant.tsx
  * @Description:
  */
@@ -91,7 +91,7 @@ export const PROMOTION_CHANNELS = [
 	},
 	{
 		image: '/tweetl.png',
-		title: 'Retweet the TweetI',
+		title: 'Retweet the Tweet',
 		icon: '/x.png',
 		points: '5',
 	},

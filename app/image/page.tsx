@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-09 22:33:23
+ * @LastEditTime: 2024-08-15 22:35:54
  * @FilePath: /dedata-front/app/image/page.tsx
  * @Description:
  */
@@ -98,6 +98,7 @@ export default function Home() {
 					onApplyChange={onApplyChange}
 					roleStatus={roleStatus}
 					languageStatus={languageStatus}
+					emptyText="Generate images captions to earn"
 					onRoleAndLanguageChange={onRoleAndLanguageChange}
 				/>
 				<Maker

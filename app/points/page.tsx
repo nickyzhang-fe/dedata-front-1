@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-14 23:05:47
+ * @LastEditTime: 2024-08-15 22:39:02
  * @FilePath: /dedata-front/app/points/page.tsx
  * @Description:
  */
@@ -44,7 +44,7 @@ export default function PointsCenter() {
 					/>
 					<span className="text-[0.14rem] font-bold text-[#333] ml-[0.06rem]">{item.title}</span>
 				</div>
-				<div className="text-[#fff] text-[0.12rem] px-[0.08rem] py-[0.02rem] rounded-[0.2rem] bg-[#3A54DF]">
+				<div className="text-[#fff] text-[0.12rem] px-[0.08rem] py-[0.02rem] rounded-[0.2rem] bg-[#3A54DF] opacity-50">
 					+{item.points} Points
 				</div>
 			</div>
@@ -58,7 +58,7 @@ export default function PointsCenter() {
 				<div className="text-[0.16rem] font-bold text-[#000]">Points Center</div>
 				<div className="flex gap-[0.6rem] p-[0.3rem]">
 					{promotionChannels}
-					<div className="w-[1.1rem] h-[1.1rem] rounded-[1.1rem] bg-[#3A54DF] opacity-50 text-[#fff] text-[0.14rem] text-center leading-[1.1rem]">
+					<div className="w-[1.1rem] h-[1.1rem] rounded-[1.1rem] bg-[#3A54DF] opacity-50 text-[#fff] text-[0.14rem] text-center leading-[1.1rem] ml-[0.2rem]">
 						More...
 					</div>
 				</div>

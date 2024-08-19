@@ -1,14 +1,14 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-04 22:28:56
+ * @LastEditTime: 2024-08-17 23:36:51
  * @FilePath: /dedata-front/app/components/Dashboard.tsx
  * @Description: when entering, first determine whether there is a pending onchain.
  */
 'use client';
 
 import { message } from 'antd';
-import { useAccount, useSignMessage, useWriteContract, useWaitForTransactionReceipt, useEstimateGas } from 'wagmi';
+import { useAccount, useSignMessage, useWriteContract, useWaitForTransactionReceipt, useTransactionCount } from 'wagmi';
 import { useState, useEffect, useCallback } from 'react';
 import { getSummaryInfo, updatePoints, getPendingOnchainTransactions } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
@@ -16,7 +16,6 @@ import useNonceRefetch from '@/app/hooks/useNonceRefetch';
 import useOnchainPoints from '@/app/hooks/useOnchainPoints';
 import { contractABI, contractAddress } from '@/app/utils/contractABI';
 import { DOnchain, OnchainStatus } from '@/app/types/index';
-
 function Dashboard({ applyStatus }: any) {
 	const [userInfo, setUserInfo] = useState({
 		totalCompletedCases: 0,
@@ -26,10 +25,9 @@ function Dashboard({ applyStatus }: any) {
 	});
 	// check has pending onchain
 	const [onchainStatus, setOnchainStatus] = useState<OnchainStatus>(0);
-
 	const { address, isConnected } = useAccount();
 	const { signMessageAsync } = useSignMessage();
-	const { data, isPending, isSuccess, writeContractAsync } = useWriteContract();
+	const { data, isPending, isSuccess, isPaused, error: writerError, writeContractAsync } = useWriteContract();
 	const { nonce, getNonce } = useNonceRefetch(address, 5000);
 	const {
 		isLoading: isWaiting,
@@ -39,10 +37,20 @@ function Dashboard({ applyStatus }: any) {
 		hash: data,
 		confirmations: 7,
 	});
-
+	const { data: lastSuccessNonce } = useTransactionCount({
+		address,
+	});
+	const { data: latestNonce } = useTransactionCount({
+		address,
+		blockTag: 'latest',
+	});
+	const { data: pendingNonce } = useTransactionCount({
+		address,
+		blockTag: 'pending',
+	});
 	const loadData = useCallback(async () => {
 		const result = await getSummaryInfo(address);
-		console.log('------>loadData', result);
+		// console.log('------>loadData', result);
 		setUserInfo(result.data);
 	}, [address]);
 	/**
@@ -61,7 +69,13 @@ function Dashboard({ applyStatus }: any) {
 				};
 			});
 			const oracleSignature = data[0].oracleSignature;
-			setOnchainStatus(1);
+			console.log(nonce, lastSuccessNonce, latestNonce, pendingNonce);
+			// last success nonce is equal to nonce
+			if (lastSuccessNonce !== undefined && BigInt(lastSuccessNonce) >= nonce) {
+				setOnchainStatus(3);
+			} else {
+				setOnchainStatus(1);
+			}
 			return {
 				points,
 				oracleSignature,
@@ -73,13 +87,23 @@ function Dashboard({ applyStatus }: any) {
 				oracleSignature: '',
 			};
 		}
-	}, [nonce, address]);
+	}, [nonce, address, lastSuccessNonce]);
 
 	useEffect(() => {
 		if (isPending) {
 			console.log('Confirming...');
 		}
-	}, [isPending]);
+		if (isSuccess) {
+			console.log('Transaction confirmed.');
+		}
+		if (isPaused) {
+			console.log('Transaction isPaused.');
+		}
+		if (writerError) {
+			console.log('Transaction error:', writerError);
+			setOnchainStatus(3);
+		}
+	}, [isPending, isPaused, isSuccess, writerError]);
 
 	useEffect(() => {
 		if (isWaiting) {
@@ -129,6 +153,8 @@ function Dashboard({ applyStatus }: any) {
 			oracleSignature = pendingInfo.oracleSignature;
 			points = pendingInfo.points;
 		}
+		console.log(points, oracleSignature);
+
 		const contractConfig: any = {
 			functionName: 'addPoints',
 			address: contractAddress,

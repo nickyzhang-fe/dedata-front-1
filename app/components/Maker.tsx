@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 23:24:06
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-11 09:28:35
+ * @LastEditTime: 2024-08-25 22:00:10
  * @FilePath: /dedata-front/app/components/Maker.tsx
  * @Description: Satisfy at the same time role=1、address exist、applyStatus=true loading data
  */
@@ -13,16 +13,17 @@ import { useAccount, useSignMessage } from 'wagmi';
 import { getMakerInfo, createMakerInfo } from '@/app/lib/api';
 import { SUCCESS_CODE } from '@/app/utils/constant';
 import Image from 'next/image';
+import Audio from './Audio';
 
 const { TextArea } = Input;
 
 function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpiredTimeChange, type }: any) {
-	// type 1: alpha 3: image
+	// type 1: alpha 3: image 4: audio
 	const [makerInfo, setMakerInfo] = useState({
 		id: 0,
 		content: '',
 		type: 1,
-		imageUrl: '',
+		fileUrl: '',
 	});
 	const [abstract, setAbstract] = useState('');
 
@@ -63,9 +64,19 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 	 */
 	async function validatorMaker() {
 		// console.log('submit', abstract.length, languageStatus);
-		const msg = `Please enter ${
-			Number(type) === 3 ? 'the captions for images' : 'the news abstract'
-		}, suggest less than 20 words`;
+		let msg = '';
+		switch (Number(type)) {
+			case 3:
+				msg = 'Please enter the captions for images, suggest less than 20 words';
+				break;
+			case 4:
+				msg = 'Please enter the contents of the audio';
+				break;
+			case 1:
+			default:
+				msg = 'Please enter the news abstract, suggest less than 20 words';
+				break;
+		}
 		if (languageStatus === 'en') {
 			if (abstract.length < 20) {
 				message.info(msg);
@@ -100,7 +111,7 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 					id: 0,
 					content: '',
 					type: 1,
-					imageUrl: '',
+					fileUrl: '',
 				});
 			}, 2000);
 		} else {
@@ -108,12 +119,25 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 		}
 	}
 
+	const getTitleText = (articleType: number) => {
+		switch (articleType) {
+			case 3:
+				return 'Image';
+			case 4:
+				return 'Audio';
+			case 1:
+			case 2:
+			default:
+				return 'Article';
+		}
+	};
+
 	if (roleStatus === 1 && applyStatus) {
 		return (
 			<div className="h-[calc(100%-0.4rem)] pt-[0.16rem]">
 				<div className="flex flex-col h-full overflow-y-auto">
 					<span className="text-[#000] text-[0.14rem] font-bold mb-[0.14rem]">
-						{makerInfo?.type === 3 ? 'Original Image' : 'Original Article'}
+						Original {getTitleText(makerInfo?.type)}
 					</span>
 					{makerInfo.type === 1 && (
 						<div
@@ -123,7 +147,7 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 					)}
 					{makerInfo.type === 3 && (
 						<Image
-							src={makerInfo?.imageUrl}
+							src={makerInfo?.fileUrl}
 							alt="logo"
 							width={0}
 							height={0}
@@ -131,6 +155,7 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 							priority
 						/>
 					)}
+					{makerInfo.type === 4 && <Audio url={makerInfo?.fileUrl} />}
 					{makerInfo.type === 1 && (
 						<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
 							Abstract
@@ -144,6 +169,14 @@ function Maker({ roleStatus, applyStatus, languageStatus, onSaveChange, onExpire
 							Description
 							<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
 								（Generate captions for images, no more than 20 words)
+							</span>
+						</span>
+					)}
+					{makerInfo.type === 4 && (
+						<span className="text-[#000] text-[0.14rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+							Description
+							<span className="text-[#999] text-[0.12rem] font-bold mt-[0.24rem] mb-[0.14rem]">
+								（The content of the audio is:)
 							</span>
 						</span>
 					)}

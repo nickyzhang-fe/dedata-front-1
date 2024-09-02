@@ -1,8 +1,8 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-28 22:58:22
- * @FilePath: /dedata-front/app/image/page.tsx
+ * @LastEditTime: 2024-08-24 22:08:12
+ * @FilePath: /dedata-front/app/audio/page.tsx
  * @Description:
  */
 'use client';
@@ -30,7 +30,7 @@ export default function Home() {
 
 	useEffect(() => {
 		async function loadData() {
-			const { code, data } = await getPendingCase(address, 3);
+			const { code, data } = await getPendingCase(address, 4);
 
 			if (code === SUCCESS_CODE) {
 				if (!data.isExist) {
@@ -85,7 +85,7 @@ export default function Home() {
 			<div className="flex flex-col flex-1 w-full bg-[#fff] rounded-[0.16rem] px-[0.24rem] py-[0.16rem] overflow-hidden relative">
 				<ContentHeader
 					title={'Work Zone'}
-					href={'https://docs.dedata.io/product-guides/datatalk/deimage'}
+					href={'https://docs.dedata.io/product-guides/datatalk/deaudio'}
 					disabled={applyStatus}
 					roleStatus={roleStatus}
 					languageStatus={languageStatus}
@@ -95,16 +95,16 @@ export default function Home() {
 					seconds={seconds}
 				/>
 				<Empty
-					image={'/DeImage.png'}
+					image={'/DeAudio.png'}
 					applyStatus={applyStatus}
 					onApplyChange={onApplyChange}
 					roleStatus={roleStatus}
 					languageStatus={languageStatus}
-					emptyText="Generate images captions to earn"
+					emptyText="Generate audio captions to earn"
 					onRoleAndLanguageChange={onRoleAndLanguageChange}
 				/>
 				<Maker
-					type="3"
+					type="4"
 					roleStatus={roleStatus}
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}
@@ -112,7 +112,7 @@ export default function Home() {
 					onExpiredTimeChange={onExpiredTimeChange}
 				/>
 				<Checker
-					type="3"
+					type="4"
 					roleStatus={roleStatus}
 					applyStatus={applyStatus}
 					languageStatus={languageStatus}

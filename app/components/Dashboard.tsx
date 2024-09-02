@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-17 23:36:51
+ * @LastEditTime: 2024-08-28 23:36:30
  * @FilePath: /dedata-front/app/components/Dashboard.tsx
  * @Description: when entering, first determine whether there is a pending onchain.
  */
@@ -87,7 +87,7 @@ function Dashboard({ applyStatus }: any) {
 				oracleSignature: '',
 			};
 		}
-	}, [nonce, address, lastSuccessNonce]);
+	}, [nonce, address, lastSuccessNonce, latestNonce, pendingNonce]);
 
 	useEffect(() => {
 		if (isPending) {

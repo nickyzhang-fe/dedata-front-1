@@ -14,16 +14,19 @@ import { MENUS } from '@/app/utils/constant';
 import { useState, useEffect } from 'react';
 import style from '@/app/style/sidebar.module.css';
 import { message } from 'antd';
+import { useAccount } from 'wagmi';
 function SideBar() {
 	const [index, setIndex] = useState(0);
 	const [path, setPath] = useState('/');
 	const pathname = usePathname();
+	const { address } = useAccount();
 
 	useEffect(() => {
 		setPath(pathname);
 	}, [pathname]);
 
 	function onComing() {
+		if (!address) return;
 		message.info('coming soon');
 	}
 	const menus = [];

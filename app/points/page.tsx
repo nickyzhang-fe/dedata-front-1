@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-15 22:39:02
+ * @LastEditTime: 2024-08-28 22:55:45
  * @FilePath: /dedata-front/app/points/page.tsx
  * @Description:
  */
@@ -12,19 +12,13 @@ import { PROMOTION_CHANNELS } from '@/app/utils/constant';
 import Dashboard from '@/app/components/Dashboard';
 import Calendar from '../components/Calendar';
 import Image from 'next/image';
-import { message } from 'antd';
+import Link from 'next/link';
 export default function PointsCenter() {
 	const [applyStatus, setApplyStatus] = useState(false);
-	/**
-	 * role ro language status change
-	 */
-	function jumpChannel(item: { image: string; title: string; icon: string; points: string }) {
-		message.info('Coming soon');
-	}
 
 	const promotionChannels = PROMOTION_CHANNELS.map((item, index) => {
 		return (
-			<div key={index} className="flex flex-col items-center cursor-pointer" onClick={() => jumpChannel(item)}>
+			<Link className="flex flex-col items-center cursor-pointer" target="_blank" href={item.href} key={index}>
 				<Image
 					src={item?.image}
 					alt="channels"
@@ -47,7 +41,7 @@ export default function PointsCenter() {
 				<div className="text-[#fff] text-[0.12rem] px-[0.08rem] py-[0.02rem] rounded-[0.2rem] bg-[#3A54DF] opacity-50">
 					+{item.points} Points
 				</div>
-			</div>
+			</Link>
 		);
 	});
 

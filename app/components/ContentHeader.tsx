@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
- * @LastEditors: nickyzhang zhangxia2013105@163.com
- * @LastEditTime: 2024-07-04 22:41:39
+ * @LastEditors: nickyzhang
+ * @LastEditTime: 2024-08-25 22:25:21
  * @FilePath: /dedata-front/app/components/ContentHeader.tsx
  * @Description:
  */
@@ -10,8 +10,9 @@
 import { Select, message } from 'antd';
 import { ROLES, LANGUAGES } from '@/app/utils/constant';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+// import { useAccount } from 'wagmi';
 import CountDown from '@/app/components/CountDown';
+import Link from 'next/link';
 
 function ContentHeader(props: any) {
 	const [languageStatus, setLanguageStatus] = useState('en');
@@ -20,7 +21,7 @@ function ContentHeader(props: any) {
 	const [minutes, setMinutes] = useState(10);
 	const [seconds, setSeconds] = useState(0);
 	const [showRoles, setShowRoles] = useState(true);
-	const { isConnected } = useAccount();
+	// const { isConnected } = useAccount();
 
 	useEffect(() => {
 		setDisabled(props.disabled);
@@ -49,17 +50,17 @@ function ContentHeader(props: any) {
 		});
 	}
 
-	function applyCaseChange() {
-		if (!isConnected) {
-			message.info('Please connect wallet first');
-			return;
-		}
-		if (disabled) {
-			message.info('Please finish current case');
-			return;
-		}
-		props.onApplyChange(true);
-	}
+	// function applyCaseChange() {
+	// 	if (!isConnected) {
+	// 		message.info('Please connect wallet first');
+	// 		return;
+	// 	}
+	// 	if (disabled) {
+	// 		message.info('Please finish current case');
+	// 		return;
+	// 	}
+	// 	props.onApplyChange(true);
+	// }
 
 	function resetTime() {
 		props.onApplyChange(false);
@@ -67,7 +68,12 @@ function ContentHeader(props: any) {
 
 	return (
 		<div className="flex justify-between items-center">
-			<span className="text-[0.16rem] font-bold text-[#000]">{props.title}</span>
+			<span className="text-[0.16rem] font-bold text-[#000]">
+				{props.title}
+				<Link href={props.href} target="_blank" className="text-[0.14rem] text-[#3A54DF] ml-[0.2rem]">
+					Tutorial &gt;&gt;
+				</Link>
+			</span>
 			<div className="flex items-center h-[0.4rem]">
 				{disabled && (
 					<span className="text-[0.14rem] text-[#333] ml-[0.1rem] mr-[0.3rem]">
@@ -97,12 +103,12 @@ function ContentHeader(props: any) {
 						disabled={disabled}
 					/>
 				)}
-				<div
+				{/* <div
 					className="bg-[#3A54DF] h-[0.32rem] leading-[0.32rem] text-center w-[1.28rem] text-[#fff] text-[0.14rem] cursor-pointer rounded-[0.16rem] ml-[0.1rem]"
 					onClick={applyCaseChange}
 				>
 					+ Apply Case
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

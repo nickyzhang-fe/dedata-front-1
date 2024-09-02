@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-07 23:08:17
+ * @LastEditTime: 2024-08-28 22:57:36
  * @FilePath: /dedata-front/app/beta/page.tsx
  * @Description:
  */
@@ -79,6 +79,7 @@ export default function Beta() {
 			<div className="flex flex-col flex-1 w-full bg-[#fff] rounded-[0.16rem] px-[0.24rem] py-[0.16rem] overflow-hidden relative">
 				<ContentHeader
 					title={'Work Zone'}
+					href={'https://docs.dedata.io/product-guides/datatalk/dearticle-beta'}
 					disabled={applyStatus}
 					roleStatus={2}
 					showRoles={false}
@@ -89,6 +90,7 @@ export default function Beta() {
 					seconds={seconds}
 				/>
 				<Empty
+					image={'/DeArticle.png'}
 					applyStatus={applyStatus}
 					onApplyChange={onApplyChange}
 					roleStatus={2}

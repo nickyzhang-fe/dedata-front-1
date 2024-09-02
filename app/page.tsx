@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-09 22:33:49
+ * @LastEditTime: 2024-08-25 22:20:14
  * @FilePath: /dedata-front/app/page.tsx
  * @Description:
  */
@@ -84,6 +84,7 @@ export default function Home() {
 			<div className="flex flex-col flex-1 w-full bg-[#fff] rounded-[0.16rem] px-[0.24rem] py-[0.16rem] overflow-hidden relative">
 				<ContentHeader
 					title={'Work Zone'}
+					href={'https://docs.dedata.io/product-guides/datatalk/dearticle-alpha'}
 					disabled={applyStatus}
 					roleStatus={roleStatus}
 					languageStatus={languageStatus}
@@ -93,6 +94,7 @@ export default function Home() {
 					seconds={seconds}
 				/>
 				<Empty
+					image={'/DeArticle.png'}
 					applyStatus={applyStatus}
 					onApplyChange={onApplyChange}
 					roleStatus={roleStatus}

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-15 22:51:04
+ * @LastEditTime: 2024-08-29 22:12:38
  * @FilePath: /dedata-front/app/utils/constant.tsx
  * @Description:
  */
@@ -15,19 +15,25 @@ export const MENUS = {
 			id: 'Alpha',
 			route: '/',
 			title: 'DeArticle(Alpha)',
-			icon: '/icon-dearticle.png',
+			icon: '/DeArticle.png',
 		},
 		{
 			id: 'Beta',
 			route: '/beta/',
 			title: 'DeArticle(Beta)',
-			icon: '/icon-dearticle.png',
+			icon: '/DeArticle.png',
 		},
 		{
 			id: 'Image',
 			route: '/image/',
 			title: 'DeImage',
 			icon: '/DeImage.png',
+		},
+		{
+			id: 'Audio',
+			route: '/audio/',
+			title: 'DeAudio',
+			icon: '/DeAudio.png',
 		},
 		{
 			id: 'others',
@@ -88,17 +94,20 @@ export const PROMOTION_CHANNELS = [
 		title: 'Follow @DedataAI',
 		icon: '/x.png',
 		points: '20',
+		href: 'https://x.com/DedataAI',
 	},
 	{
 		image: '/tweetl.png',
 		title: 'Retweet the Tweet',
 		icon: '/x.png',
 		points: '5',
+		href: 'https://x.com/DedataAI/status/1811058674544300358',
 	},
 	{
 		image: '/jointg.png',
 		title: 'Join Telegram',
 		icon: '/tg.png',
 		points: '10',
+		href: 'https://t.me/dedataio',
 	},
 ];

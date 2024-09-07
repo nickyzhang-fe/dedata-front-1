@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-25 22:25:21
+ * @LastEditTime: 2024-09-07 14:57:01
  * @FilePath: /dedata-front/app/components/ContentHeader.tsx
  * @Description:
  */
@@ -77,7 +77,7 @@ function ContentHeader(props: any) {
 			<div className="flex items-center h-[0.4rem]">
 				{disabled && (
 					<span className="text-[0.14rem] text-[#333] ml-[0.1rem] mr-[0.3rem]">
-						Estimated point: {roleStatus === 1 ? 10 : 1}
+						Estimated point: {roleStatus === 1 ? 20 : 5}
 					</span>
 				)}
 				{disabled && (

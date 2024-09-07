@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-06-02 21:59:59
  * @LastEditors: nickyzhang
- * @LastEditTime: 2024-08-29 22:12:38
+ * @LastEditTime: 2024-09-07 14:56:02
  * @FilePath: /dedata-front/app/utils/constant.tsx
  * @Description:
  */
@@ -93,21 +93,21 @@ export const PROMOTION_CHANNELS = [
 		image: '/dedataai.png',
 		title: 'Follow @DedataAI',
 		icon: '/x.png',
-		points: '20',
+		points: '0',
 		href: 'https://x.com/DedataAI',
 	},
 	{
 		image: '/tweetl.png',
 		title: 'Retweet the Tweet',
 		icon: '/x.png',
-		points: '5',
+		points: '0',
 		href: 'https://x.com/DedataAI/status/1811058674544300358',
 	},
 	{
 		image: '/jointg.png',
 		title: 'Join Telegram',
 		icon: '/tg.png',
-		points: '10',
+		points: '0',
 		href: 'https://t.me/dedataio',
 	},
 ];
